@@ -29,20 +29,35 @@ public class ParseJsonFile {
     public static int getPageID(JsonArray searchResults){
         Scanner sc = new Scanner(System.in);
         System.out.println("Введите номер статьи для открытия: ");
-        int choice = sc.nextInt();
-        sc.close();
+        int choice = -1;
+        try {
+            if (sc.hasNextInt()) {
+                choice = sc.nextInt();
+            } else {
+                System.out.println("Ошибка: Вы должны ввести число.");
+                return -1;
+            }
+        } catch (Exception e) {
+            System.out.println("Произошла ошибка: " + e.getMessage());
+            return -1;
+        } finally {
+            sc.close();
+        }
         if(choice > 0 && choice <= searchResults.size()){
             int pageId = searchResults.get(choice - 1).getAsJsonObject().get("pageid").getAsInt();
             return pageId;
         }
         else
         {
-            System.out.println("Неккоректный ввод.");
+            System.out.println("Ошибка: Неккоректный ввод.");
             return -1;
         }
     }
 
     public static void openInBrowser(int pageId){
+        if (pageId == -1){
+            return;
+        }
         String url = "https://ru.wikipedia.org/w/index.php?curid=" + pageId;
         try{
             Desktop desktop = Desktop.getDesktop();
