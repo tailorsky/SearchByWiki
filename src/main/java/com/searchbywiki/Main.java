@@ -13,10 +13,13 @@ public class Main {
             Scanner sc = new Scanner(System.in);
             String query = sc.nextLine();
             String encodedQuery = URLEncoder.encode(query, "UTF-8");
-
+            if (encodedQuery.length() == 0) {
+                sc.close();
+                System.out.println("Введена пустая строка. Повторите попытку");
+                return;
+            }
             JsonObject response = SearchWikipedia.searchbywiki(encodedQuery);
             ParseJsonFile.parseAndDisplayResults(response);
-
             sc.close();
         }
         catch (UnsupportedEncodingException e){
